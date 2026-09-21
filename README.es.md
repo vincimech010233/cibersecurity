@@ -29,6 +29,16 @@ Colección compacta de utilidades defensivas y laboratorios locales deliberadame
 
 Cada proyecto puede requerir Python 3, Bash, Docker o Docker Compose. Revisa el código antes de ejecutar scripts con privilegios elevados.
 
+### Reproducir el ejemplo de análisis de logs
+
+```bash
+cd soc/logs
+./simulated_logs.sh /tmp/simulated_logs.log
+python3 analisis_logs.py /tmp/simulated_logs.log --output-dir /tmp/log-analysis-report
+```
+
+El log generado, la lista de IP bloqueadas y el informe Markdown se mantienen fuera del control de versiones.
+
 ## Consideraciones de seguridad
 
 Los registros y direcciones de ejemplo son simulados o privados. No dirijas escáneres contra infraestructura ajena sin autorización escrita. Los ejemplos vulnerables son exclusivamente para laboratorios locales aislados.

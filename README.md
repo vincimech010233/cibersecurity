@@ -29,6 +29,16 @@ A compact collection of defensive security utilities and intentionally vulnerabl
 
 Requirements vary by project and may include Python 3, Bash, Docker, and Docker Compose. Read the source before running scripts with elevated privileges.
 
+### Reproduce the log-analysis example
+
+```bash
+cd soc/logs
+./simulated_logs.sh /tmp/simulated_logs.log
+python3 analisis_logs.py /tmp/simulated_logs.log --output-dir /tmp/log-analysis-report
+```
+
+The generated log, blocked-IP list, and Markdown report are intentionally kept out of version control.
+
 ## Security considerations
 
 - Example logs and addresses are simulated or private-range data.

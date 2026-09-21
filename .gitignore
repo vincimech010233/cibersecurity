@@ -1,0 +1,4 @@
+# Generated SOC exercise outputs
+soc/logs/simulated_logs.log
+soc/logs/blocked_ips.txt
+soc/logs/report.md
