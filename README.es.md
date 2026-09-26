@@ -29,13 +29,25 @@ Colección compacta de utilidades defensivas y laboratorios locales deliberadame
 
 Cada proyecto puede requerir Python 3, Bash, Docker o Docker Compose. Revisa el código antes de ejecutar scripts con privilegios elevados.
 
+### Reproducir el ejemplo de análisis de logs
+
+```bash
+cd soc/logs
+./simulated_logs.sh /tmp/simulated_logs.log
+python3 analisis_logs.py /tmp/simulated_logs.log --output-dir /tmp/log-analysis-report
+```
+
+El log generado, la lista de IP bloqueadas y el informe Markdown se mantienen fuera del control de versiones.
+
 ## Consideraciones de seguridad
 
 Los registros y direcciones de ejemplo son simulados o privados. No dirijas escáneres contra infraestructura ajena sin autorización escrita. Los ejemplos vulnerables son exclusivamente para laboratorios locales aislados.
 
 ## Limitaciones
 
-Todavía no existe una CLI unificada, una suite automática de pruebas ni integración continua.
+El analizador de logs simulados tiene pruebas de regresión y CI con GitHub Actions (Python 3.11 y comprobación de sintaxis Bash). Ejecuta `python3 -m unittest discover -s soc/logs -p 'test_*.py' -v` desde la raíz del repositorio. Los demás directorios siguen siendo ejercicios independientes sin validación automática; no existe una CLI unificada.
+
+El analizador escribe una lista de IP candidatas; no modifica el cortafuegos. El script separado `soc/check_failed_logins/` sí modifica el cortafuegos del equipo y no forma parte de este flujo probado. Los laboratorios Docker antiguos publican puertos en todas las interfaces por defecto; revisa y restringe sus enlaces de puertos antes de ejecutarlos en un entorno aislado.
 
 ## Licencia
 

@@ -29,6 +29,16 @@ A compact collection of defensive security utilities and intentionally vulnerabl
 
 Requirements vary by project and may include Python 3, Bash, Docker, and Docker Compose. Read the source before running scripts with elevated privileges.
 
+### Reproduce the log-analysis example
+
+```bash
+cd soc/logs
+./simulated_logs.sh /tmp/simulated_logs.log
+python3 analisis_logs.py /tmp/simulated_logs.log --output-dir /tmp/log-analysis-report
+```
+
+The generated log, blocked-IP list, and Markdown report are intentionally kept out of version control.
+
 ## Security considerations
 
 - Example logs and addresses are simulated or private-range data.
@@ -38,7 +48,9 @@ Requirements vary by project and may include Python 3, Bash, Docker, and Docker 
 
 ## Current limitations
 
-The collection does not yet have a unified CLI, automated test suite, or CI pipeline. Each directory is an independent learning project.
+The simulated log analyzer has automated regression tests and GitHub Actions CI (Python 3.11 and Bash syntax checks). Run `python3 -m unittest discover -s soc/logs -p 'test_*.py' -v` from the repository root. Other directories remain independent learning exercises without automated validation; there is no unified CLI.
+
+The analyzer writes a candidate IP list; it does not change firewall rules. The separate `soc/check_failed_logins/` script does modify the host firewall and is not part of this tested workflow. The older Docker labs bind to all interfaces by default; review and restrict their port bindings before running them in an isolated environment.
 
 ## License
 
