@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import argparse
+import ipaddress
 import re
 from collections import Counter
 from pathlib import Path
 from typing import Iterable
 
-IP_PATTERN = re.compile(r"\bIP=(\d+\.\d+\.\d+\.\d+)\b")
+IP_PATTERN = re.compile(r"(?:^|\s)IP=([^\s]+)(?=\s|$)")
+FAILED_EVENT_PATTERN = re.compile(r"(?:^|\s)LOGIN_FAILED(?=\s|$)")
 DEFAULT_THRESHOLD = 3
 
 
@@ -16,11 +18,15 @@ def count_failed_logins(lines: Iterable[str]) -> Counter[str]:
     """Return failed-login counts grouped by IP address."""
     counts: Counter[str] = Counter()
     for line in lines:
-        if "LOGIN_FAILED" not in line:
+        if not FAILED_EVENT_PATTERN.search(line):
             continue
         match = IP_PATTERN.search(line)
         if match:
-            counts[match.group(1)] += 1
+            try:
+                address = ipaddress.IPv4Address(match.group(1))
+            except ipaddress.AddressValueError:
+                continue
+            counts[str(address)] += 1
     return counts
 
 

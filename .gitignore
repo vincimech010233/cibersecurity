@@ -2,3 +2,8 @@
 soc/logs/simulated_logs.log
 soc/logs/blocked_ips.txt
 soc/logs/report.md
+
+# Python test caches
+__pycache__/
+*.py[cod]
+.pytest_cache/

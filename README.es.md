@@ -45,7 +45,9 @@ Los registros y direcciones de ejemplo son simulados o privados. No dirijas esc�
 
 ## Limitaciones
 
-Todavía no existe una CLI unificada, una suite automática de pruebas ni integración continua.
+El analizador de logs simulados tiene pruebas de regresión y CI con GitHub Actions (Python 3.11 y comprobación de sintaxis Bash). Ejecuta `python3 -m unittest discover -s soc/logs -p 'test_*.py' -v` desde la raíz del repositorio. Los demás directorios siguen siendo ejercicios independientes sin validación automática; no existe una CLI unificada.
+
+El analizador escribe una lista de IP candidatas; no modifica el cortafuegos. El script separado `soc/check_failed_logins/` sí modifica el cortafuegos del equipo y no forma parte de este flujo probado. Los laboratorios Docker antiguos publican puertos en todas las interfaces por defecto; revisa y restringe sus enlaces de puertos antes de ejecutarlos en un entorno aislado.
 
 ## Licencia
 
