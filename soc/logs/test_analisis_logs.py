@@ -23,7 +23,7 @@ class LogAnalysisTests(unittest.TestCase):
 
     def test_outputs_are_sorted_and_threshold_is_exclusive(self) -> None:
         counts = {"192.168.1.30": 5, "192.168.1.20": 4, "192.168.1.10": 3}
-        with tempfile.TemporaryDirectory() as temporary_dir:
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as temporary_dir:
             blocked = write_outputs(counts, Path(temporary_dir), threshold=3)
 
             self.assertEqual(blocked, {"192.168.1.20", "192.168.1.30"})
@@ -37,7 +37,7 @@ class LogAnalysisTests(unittest.TestCase):
 
     def test_cli_from_another_directory(self) -> None:
         script = Path(__file__).with_name("analisis_logs.py").resolve()
-        with tempfile.TemporaryDirectory() as directory:
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as directory:
             root = Path(directory)
             log = root / "input folder" / "fixture.log"
             log.parent.mkdir()
@@ -48,7 +48,7 @@ class LogAnalysisTests(unittest.TestCase):
                 self.assertEqual((output / "blocked_ips.txt").read_text(), "192.0.2.1\n")
 
     def test_empty_input_clears_previous_outputs(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as directory:
             output = Path(directory)
             write_outputs({"192.0.2.1": 4}, output, 3)
             self.assertEqual(write_outputs(count_failed_logins([]), output, 3), set())
