@@ -11,17 +11,17 @@ A compact collection of defensive security utilities and intentionally vulnerabl
 ### SOC and defensive analysis
 
 - `soc/logs/` — generates simulated authentication logs, analyzes events, identifies repeated failures, and produces a report.
-- `soc/check_failed_logins/` — shell utility for reviewing failed login activity.
+- `soc/check_failed_logins/` — read-only failed-login summary with candidate addresses.
 
 ### System and network utilities
 
 - `pentesting/binarios-SUID/` — inventories SUID binaries and helps compare them with known escalation references.
-- `pentesting/dev-tcp-scanner/` — minimal Bash TCP-connectivity scanner.
+- `pentesting/dev-tcp-scanner/` — Bash TCP-connectivity scanner with validated ports and a localhost default.
 - `pentesting/escaner_red/` — Python network-scanning exercise intended for controlled environments.
 
 ### Controlled vulnerability labs
 
-- `pentesting/dockerlabs/injection/` — local Docker example contrasting vulnerable and safer PHP handling.
+- `pentesting/dockerlabs/injection/` — Docker example contrasting vulnerable and safer PHP handling, published on loopback.
 - `pentesting/sql-injection-time/` — documentation for a DVWA time-based SQL-injection lab.
 - `pentesting/xor_signing_exploit/` — educational demonstration of why repeating-key XOR is unsuitable for message authentication.
 
@@ -39,6 +39,15 @@ python3 analisis_logs.py /tmp/simulated_logs.log --output-dir /tmp/log-analysis-
 
 The generated log, blocked-IP list, and Markdown report are intentionally kept out of version control.
 
+### Review failed logins and local ports
+
+```bash
+bash soc/check_failed_logins/check_failed_logins.sh --log /path/to/auth.log
+bash pentesting/dev-tcp-scanner/port_escan.sh --start-port 1 --end-port 10
+```
+
+The failed-login utility requires Python 3 for address validation. It reads the supplied log and prints counts and candidates. It does not write a report or alter firewall rules. The scanner defaults to `127.0.0.1`, ports 1–10, and a one-second connection timeout; `--host` explicitly accepts `localhost` or an IPv4 address. Use it only on systems you own or are expressly authorized to test. The intentionally vulnerable injection lab's Compose port and the documented DVWA example bind to `127.0.0.1`.
+
 ## Security considerations
 
 - Example logs and addresses are simulated or private-range data.
@@ -48,9 +57,9 @@ The generated log, blocked-IP list, and Markdown report are intentionally kept o
 
 ## Current limitations
 
-The simulated log analyzer has automated regression tests and GitHub Actions CI (Python 3.11 and Bash syntax checks). Run `python3 -m unittest discover -s soc/logs -p 'test_*.py' -v` from the repository root. Other directories remain independent learning exercises without automated validation; there is no unified CLI.
+Automated regression tests cover the simulated log analyzer, failed-login summary, TCP scanner, and the injection lab's published port. GitHub Actions runs both Python suites and checks Bash syntax. From the repository root, run `python3 -m unittest discover -s soc/logs -p 'test_*.py' -v` and `python3 -m unittest discover -s tests -p 'test_*.py' -v`. The remaining directories are independent learning exercises without automated validation; there is no unified CLI.
 
-The analyzer writes a candidate IP list; it does not change firewall rules. The separate `soc/check_failed_logins/` script does modify the host firewall and is not part of this tested workflow. The older Docker labs bind to all interfaces by default; review and restrict their port bindings before running them in an isolated environment.
+Before these changes, the separate failed-login script could modify the firewall, the scanner lacked working input validation, and the injection lab published its port on all interfaces. Those paths now have read-only reporting, validated scanner arguments, and a loopback binding. This does not establish safety for the other legacy exercises.
 
 ## License
 
